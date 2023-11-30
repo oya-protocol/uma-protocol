@@ -850,7 +850,7 @@ describe("OyaModule", () => {
     );
   });
 
-  it("Proposals can be executed with minimal proxy optimistic governor", async function () {
+  it("Proposals can be executed with minimal proxy Oya Module", async function () {
     // Deploy proxy factory.
     const ModuleProxyFactory = getContract("ModuleProxyFactory");
     const moduleProxyFactory = await ModuleProxyFactory.new().send({ from: owner });
@@ -1023,7 +1023,7 @@ describe("OyaModule", () => {
       )
     );
 
-    // Whitelist Optimistic Governor as whitelisted asserting caller and proposer as whitelisted asserter.
+    // Whitelist Oya Module as whitelisted asserting caller and proposer as whitelisted asserter.
     await escalationManager.methods
       .setWhitelistedAssertingCallers(optimisticOracleModule.options.address, true)
       .send({ from: owner });
@@ -1188,7 +1188,7 @@ describe("OyaModule", () => {
   });
 
   it("Cannot process callback from Optimistic Oracle V3 with invalid assertionId", async function () {
-    // Create assertion directly with Optimistic Oracle V3 and pointing Optimistic Governor as the callback recipient.
+    // Create assertion directly with Optimistic Oracle V3 and pointing Oya Module as the callback recipient.
     await bondToken.methods.approve(optimisticOracleV3.options.address, bond).send({ from: proposer });
     const fakeClaim = utf8ToHex("Fake claim");
     await optimisticOracleV3.methods
@@ -1222,7 +1222,7 @@ describe("OyaModule", () => {
       )
     );
 
-    // Disputing the assertion should revert because the assertionId is not known to the Optimistic Governor.
+    // Disputing the assertion should revert because the assertionId is not known to the Oya Module.
     assert(
       await didContractThrow(
         optimisticOracleV3.methods.disputeAssertion(assertionId, disputer).send({ from: disputer })

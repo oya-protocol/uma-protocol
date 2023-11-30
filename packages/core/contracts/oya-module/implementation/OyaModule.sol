@@ -68,7 +68,7 @@ contract OyaModule is OptimisticOracleV3CallbackRecipientInterface, Module, Lock
     IERC20 public collateral; // Collateral currency used to assert proposed transactions.
     uint64 public liveness; // The amount of time to dispute proposed transactions before they can be executed.
     uint256 public bondAmount; // Configured amount of collateral currency to make assertions for proposed transactions.
-    string public rules; // Rules for the Optimistic Governor.
+    string public rules; // Rules for the Oya Module.
     bytes32 public identifier; // Identifier used to request price from the DVM, compatible with Optimistic Oracle V3.
     OptimisticOracleV3Interface public optimisticOracleV3; // Optimistic Oracle V3 contract used to assert proposed transactions.
     address public escalationManager; // Optional Escalation Manager contract to whitelist proposers / disputers.
@@ -96,12 +96,12 @@ contract OyaModule is OptimisticOracleV3CallbackRecipientInterface, Module, Lock
     mapping(bytes32 => bytes32) public proposalHashes; // Maps assertionIds to proposal hashes.
 
     /**
-     * @notice Construct Optimistic Governor module.
+     * @notice Construct Oya Module module.
      * @param _finder Finder address.
      * @param _owner Address of the owner.
      * @param _collateral Address of the ERC20 collateral used for bonds.
      * @param _bondAmount Amount of collateral currency to make assertions for proposed transactions
-     * @param _rules Reference to the rules for the Optimistic Governor.
+     * @param _rules Reference to the rules for the Oya Module.
      * @param _identifier The approved identifier to be used with the contract, compatible with Optimistic Oracle V3.
      * @param _liveness The period, in seconds, in which a proposal can be disputed.
      */
@@ -121,7 +121,7 @@ contract OyaModule is OptimisticOracleV3CallbackRecipientInterface, Module, Lock
     }
 
     /**
-     * @notice Sets up the Optimistic Governor module.
+     * @notice Sets up the Oya Module module.
      * @param initializeParams ABI encoded parameters to initialize the module with.
      * @dev This method can be called only either by the constructor or as part of first time initialization when
      * cloning the module.
@@ -171,7 +171,7 @@ contract OyaModule is OptimisticOracleV3CallbackRecipientInterface, Module, Lock
      * @param _rules string that outlines or references the location where the rules can be found.
      */
     function setRules(string memory _rules) public onlyOwner {
-        // Set reference to the rules for the Optimistic Governor
+        // Set reference to the rules for the Oya Module
         require(bytes(_rules).length > 0, "Rules can not be empty");
         rules = _rules;
         emit SetRules(_rules);
@@ -206,7 +206,7 @@ contract OyaModule is OptimisticOracleV3CallbackRecipientInterface, Module, Lock
      * @param _escalationManager address of the Escalation Manager, can be zero to disable this functionality.
      * @dev Only the owner can call this method. The provided address must conform to the Escalation Manager interface.
      * FullPolicyEscalationManager can be used, but within the context of this contract it should be used only for
-     * whitelisting of proposers and disputers since Optimistic Governor is deleting disputed proposals.
+     * whitelisting of proposers and disputers since Oya Module is deleting disputed proposals.
      */
     function setEscalationManager(address _escalationManager) external onlyOwner {
         require(_isContract(_escalationManager) || _escalationManager == address(0), "EM is not a contract");
@@ -259,7 +259,7 @@ contract OyaModule is OptimisticOracleV3CallbackRecipientInterface, Module, Lock
         require(assertionIds[proposalHash] == bytes32(0), "Duplicate proposals not allowed");
 
         // Get the bond from the proposer and approve the required bond to be used by the Optimistic Oracle V3.
-        // This will fail if the proposer has not granted the Optimistic Governor contract an allowance
+        // This will fail if the proposer has not granted the Oya Module contract an allowance
         // of the collateral token equal to or greater than the totalBond.
         uint256 totalBond = getProposalBond();
         collateral.safeTransferFrom(proposer, address(this), totalBond);
