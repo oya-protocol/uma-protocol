@@ -28,7 +28,7 @@ import "../../common/interfaces/AddressWhitelistInterface.sol";
 contract OyaModule is OptimisticOracleV3CallbackRecipientInterface, Module, Lockable {
     using SafeERC20 for IERC20;
 
-    event OptimisticGovernorDeployed(address indexed owner, address indexed avatar, address target);
+    event OyaModuleDeployed(address indexed owner, address indexed avatar, address target);
 
     event TransactionsProposed(
         address indexed proposer,
@@ -146,7 +146,7 @@ contract OyaModule is OptimisticOracleV3CallbackRecipientInterface, Module, Lock
         transferOwnership(_owner);
         _sync();
 
-        emit OptimisticGovernorDeployed(_owner, avatar, target);
+        emit OyaModuleDeployed(_owner, avatar, target);
     }
 
     /**

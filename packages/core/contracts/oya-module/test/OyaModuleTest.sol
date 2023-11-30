@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "../implementation/OyaModule.sol";
 import "../../common/implementation/Testable.sol";
 
-// Test contract to add controllable timing to the OptimisticGovernor.
+// Test contract to add controllable timing to the OyaModule.
 contract OyaModuleTest is OyaModule, Testable {
     constructor(
         address _finder,
