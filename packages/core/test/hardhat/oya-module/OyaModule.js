@@ -58,10 +58,6 @@ describe("OyaModule", () => {
     return testToken.methods.transfer(destination, amount).encodeABI();
   };
 
-  // const constructProposalDeleteTransaction = (proposalHash) => {
-  //   return optimisticOracleModule.methods.deleteProposal(proposalHash).encodeABI();
-  // };
-
   const advanceTime = async (timeIncrease) => {
     await timer.methods
       .setCurrentTime(Number(await timer.methods.getCurrentTime().call()) + timeIncrease)
@@ -727,61 +723,6 @@ describe("OyaModule", () => {
       await didContractThrow(optimisticOracleModule.methods.executeProposal(transactions).send({ from: executor }))
     );
   });
-
-  // /*
-  //  * This test is currently failing. Need to reason about how to send a transaction from the avatar
-  //  * to the module itself, with the transaction being proposed and approved through the module.
-  //  */
-  // it("Owner can delete proposals before execution", async function () {
-  //   // Issue some test tokens to the avatar address.
-  //   await testToken.methods.allocateTo(avatar.options.address, toWei("3")).send({ from: accounts[0] });
-  //   await testToken2.methods.allocateTo(avatar.options.address, toWei("2")).send({ from: accounts[0] });
-  //   // Construct the transaction data to send the newly minted tokens to proposer and another address.
-  //   const txnData1 = constructTransferTransaction(proposer, toWei("1"));
-  //   const txnData2 = constructTransferTransaction(rando, toWei("2"));
-  //   const txnData3 = constructTransferTransaction(proposer, toWei("2"));
-  //   const operation = 0; // 0 for call, 1 for delegatecall
-  //   // Send the proposal with multiple transactions.
-  //   const prevProposalId = parseInt(await optimisticOracleModule.methods.prevProposalId().call());
-  //   const proposalId = prevProposalId + 1;
-  //   const transactions = [
-  //     { to: testToken.options.address, value: 0, data: txnData1, operation },
-  //     { to: testToken.options.address, value: 0, data: txnData2, operation },
-  //     { to: testToken2.options.address, value: 0, data: txnData3, operation },
-  //   ];
-  //   const explanation = utf8ToHex("These transactions were approved by majority vote on Snapshot.");
-  //   await optimisticOracleModule.methods.proposeTransactions(transactions, explanation).send({ from: proposer });
-  //   const proposalTime = parseInt(await optimisticOracleModule.methods.getCurrentTime().call());
-
-  //   // Wait until the end of the dispute period.
-  //   await advanceTime(liveness);
-
-  //   // Create new proposal to delete the old one.
-  //   const txnData4 = constructProposalDeleteTransaction(proposalId);
-  //   const deleteId = proposalId + 1;
-  //   console.log("deleteId:", deleteId);
-  //   const deleteTransaction = [{ to: optimisticOracleModule.options.address, value: 0, data: txnData4, operation }];
-  //   const deleteExplanation = utf8ToHex("Oops, we messed up the parameters on the other proposal.");
-  //   await optimisticOracleModule.methods
-  //     .proposeTransactions(deleteTransaction, deleteExplanation)
-  //     .send({ from: proposer });
-  //   const deleteProposalTime = parseInt(await optimisticOracleModule.methods.getCurrentTime().call());
-
-  //   // Wait until the end of the new dispute period.
-  //   await advanceTime(liveness);
-
-  //   // Execute the delete proposal.
-  //   await optimisticOracleModule.methods
-  //     .executeProposal(deleteId, deleteTransaction, deleteProposalTime)
-  //     .send({ from: executor });
-
-  //   // Original proposal can not be executed.
-  //   assert(
-  //     await didContractThrow(
-  //       optimisticOracleModule.methods.executeProposal(proposalId, transactions, proposalTime).send({ from: executor })
-  //     )
-  //   );
-  // });
 
   it("Owner can update stored contract parameters", async function () {
     // All tests here are run through the avatar contract that is the owner of the module.
